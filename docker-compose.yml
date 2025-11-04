@@ -1,0 +1,10 @@
+services:
+propiedades:
+build: .
+ports:
+- "3000:3000"
+environment:
+- PORT=3000
+- DB_FILE=/app/data/properties.db
+volumes:
+- ./data:/app/data

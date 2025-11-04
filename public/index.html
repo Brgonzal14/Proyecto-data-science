@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buscador de Propiedades — Proyecto DS</title>
+  <link rel="icon" href="data:,">
+  <!-- Asegúrate de tener public/styles.css -->
+  <link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand">🏠 Propiedades DS</div>
+      <a class="gh" href="#" id="dummyLink" aria-hidden="true"></a>
+    </nav>
+
+    <h1>Encuentra tu próxima propiedad</h1>
+    <p class="subtitle">
+      Filtra por comuna, habitaciones, baños y metros cuadrados. Deja cualquier casilla en blanco si no te importa ese filtro.
+    </p>
+
+    <form id="searchForm" class="searchbar" autocomplete="off">
+      <div class="field">
+        <label for="comuna">¿Dónde?</label>
+        <input id="comuna" name="comuna" placeholder="Comuna (opcional)">
+      </div>
+
+      <div class="field compact">
+        <label for="roomsMin">Habitaciones</label>
+        <input id="roomsMin" name="roomsMin" type="number" min="0" step="1" placeholder="mín." inputmode="numeric">
+      </div>
+      <div class="field compact">
+        <label for="bathsMin">Baños</label>
+        <input id="bathsMin" name="bathsMin" type="number" min="0" step="1" placeholder="mín." inputmode="numeric">
+      </div>
+
+      <div class="field compact">
+        <label for="minM2">M² (mín.)</label>
+        <input id="minM2" name="minM2" type="number" min="0" step="1" placeholder="—">
+      </div>
+      <div class="field compact">
+        <label for="maxM2">M² (máx.)</label>
+        <input id="maxM2" name="maxM2" type="number" min="0" step="1" placeholder="—">
+      </div>
+
+      <div class="field select">
+        <label for="sort">Ordenar</label>
+        <select id="sort" name="sort">
+          <option value="price_asc">Menor precio</option>
+          <option value="price_desc">Mayor precio</option>
+          <option value="m2_desc">Mayor m²</option>
+          <option value="m2_asc">Menor m²</option>
+          <option value="recent">Más recientes</option>
+        </select>
+      </div>
+
+    <div class="actions">
+        <button class="btn" id="btnBuscar">Buscar</button>
+        <button type="button" class="btn ghost" id="btnLimpiar">Limpiar filtros</button>
+    </div>
+
+
+    </form>
+  </header>
+
+  <main class="container">
+    <div id="summary" class="summary"></div>
+    <div id="results" class="grid"></div>
+    <div class="pager" id="pager" hidden>
+      <button id="prevPage" class="btn ghost">← Anterior</button>
+      <span id="pageInfo"></span>
+      <button id="nextPage" class="btn ghost">Siguiente →</button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <small>Proyecto Data Science · Demo</small>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

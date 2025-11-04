@@ -1,0 +1,59 @@
+# Buscador de Propiedades (HTML/CSS/JS + Node/SQLite)
+
+Aplicación simple para buscar propiedades por **comuna**, **habitaciones**, **baños** y **m²**.
+Incluye API en **Node/Express** con **SQLite** (se crea y se llena con datos de ejemplo automáticamente).
+
+## 1 Requisitos
+
+* **Node.js 18+** (recomendado 20+)
+* (Opcional) **Docker Desktop** si quieres levantarlo con contenedores
+
+## 2 Estructura (lo importante)
+
+```
+propiedades-app/
+├─ public/
+│  ├─ index.html
+│  ├─ styles.css
+│  └─ app.js
+├─ server.js
+├─ package.json
+├─ Dockerfile
+└─ docker-compose.yml
+```
+
+## 3 Levantar en local (sin Docker)
+
+1. Instalar dependencias:
+
+   ```bash
+   npm install
+   ```
+
+2. Iniciar el servidor:
+
+   ```bash
+   npm start
+   ```
+
+3. Abrir en el navegador:
+   **[http://localhost:3000](http://localhost:3000)**
+
+4. (Opcional) Verifica que la API responde:
+
+   * Healthcheck: [http://localhost:3000/api/health](http://localhost:3000/api/health) → `{ "ok": true }`
+   * Datos: [http://localhost:3000/api/properties](http://localhost:3000/api/properties)
+
+> La primera vez se crea el archivo de base de datos **`./data/properties.db`** y se cargan **6 propiedades de ejemplo**.
+
+## 4 Levantar con Docker (opcional)
+
+1. Construir y levantar:
+
+   ```bash
+   docker compose up -d --build
+   ```
+2. Abrir: **[http://localhost:3000](http://localhost:3000)**
+
+> La base queda persistida en `./data` (mapeada dentro del contenedor).
+
