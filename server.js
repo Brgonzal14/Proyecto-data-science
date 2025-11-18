@@ -4,19 +4,23 @@ import morgan from 'morgan';
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+// __dirname en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+
+const PORT   = process.env.PORT   || 3000;
 const dbFile = process.env.DB_FILE || './data/properties.db';
 
-// Asegurar carpeta de datos
+// asegurar carpeta de datos
 fs.mkdirSync(path.dirname(dbFile), { recursive: true });
 
-// Inicializar DB
+// ===== DB =====
 const db = new Database(dbFile);
 
-// Esquema + datos de ejemplo
 db.exec(`
 CREATE TABLE IF NOT EXISTS properties (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,13 +55,12 @@ if (countRow.c === 0) {
   insertMany(sample);
 }
 
-// 👇 CREA app ANTES de usar app.use
+// ===== APP =====
 const app = express();
-
 app.use(morgan('dev'));
 app.use(express.static('public'));
 
-// API de búsqueda
+// Buscar con filtros + paginación
 app.get('/api/properties', (req, res) => {
   const {
     comuna, roomsMin, roomsMax, bathsMin, bathsMax,
@@ -87,9 +90,9 @@ app.get('/api/properties', (req, res) => {
   else if (sort === 'm2_asc')  orderBy = 'm2 ASC';
   else if (sort === 'recent')  orderBy = 'datetime(created_at) DESC';
 
-  const limit = Math.max(1, Math.min(100, +pageSize || 12));
-  const pageNum = Math.max(1, +page || 1);
-  const offset = (pageNum - 1) * limit;
+  const limit  = Math.max(1, Math.min(100, +pageSize || 12));
+  const pageN  = Math.max(1, +page || 1);
+  const offset = (pageN - 1) * limit;
 
   const items = db.prepare(
     `SELECT * FROM properties ${whereSql} ORDER BY ${orderBy} LIMIT @limit OFFSET @offset`
@@ -99,11 +102,39 @@ app.get('/api/properties', (req, res) => {
     `SELECT COUNT(*) AS c FROM properties ${whereSql}`
   ).get(params).c;
 
-  res.json({ items, total, page: pageNum, pageSize: limit });
+  res.json({ items, total, page: pageN, pageSize: limit });
 });
 
-// Healthcheck
+// Health
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
+
+// ===== Detalle =====
+app.get('/api/properties/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const row = db.prepare('SELECT * FROM properties WHERE id = ?').get(id);
+  if (!row) return res.status(404).json({ error: 'Not found' });
+  res.json(row);
+});
+
+app.get('/api/properties/:id/similar', (req, res) => {
+  const id = Number(req.params.id);
+  const base = db.prepare('SELECT * FROM properties WHERE id = ?').get(id);
+  if (!base) return res.json({ items: [] });
+  const items = db.prepare(`
+    SELECT * FROM properties
+    WHERE id != @id
+      AND comuna = @comuna
+      AND rooms BETWEEN @rmin AND @rmax
+    ORDER BY price ASC
+    LIMIT 6
+  `).all({ id, comuna: base.comuna, rmin: (base.rooms ?? 0) - 1, rmax: (base.rooms ?? 0) + 1 });
+  res.json({ items });
+});
+
+// Servir la página de detalle en /p/:id
+app.get('/p/:id', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'property.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);

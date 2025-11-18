@@ -60,20 +60,21 @@ function renderResults(items){
         resultsEl.innerHTML = '<div class="summary">No se encontraron resultados con esos filtros.</div>';
         return;
 }
-const html = items.map(it => `
+  const html = items.map(it => `
     <article class="card">
-        <div class="thumb" role="img" aria-label="Vista de la propiedad"></div>
-        <div class="body">
-            <h3>${escapeHtml(it.title)}</h3>
-            <div class="meta">
-                <span class="badge">📍 ${escapeHtml(it.comuna || '—')}</span>
-                <span class="badge">🛏 ${it.rooms ?? '—'}</span>
-                <span class="badge">🛁 ${it.baths ?? '—'}</span>
-                <span class="badge">📐 ${it.m2 ?? '—'} m²</span>
-                ${it.parking ? `<span class="badge">🅿️ ${it.parking}</span>` : ''}
-            </div>
-            <div class="price">${formatPrice(it.price, it.currency)}</div>
+      <a class="card-link" href="/p/${it.id}" aria-label="Ver detalle de ${escapeHtml(it.title)}"></a>
+      <div class="thumb" role="img" aria-label="Vista de la propiedad"></div>
+      <div class="body">
+        <h3>${escapeHtml(it.title)}</h3>
+        <div class="meta">
+          <span class="badge">📍 ${escapeHtml(it.comuna || '—')}</span>
+          <span class="badge">🛏 ${it.rooms ?? '—'}</span>
+          <span class="badge">🛁 ${it.baths ?? '—'}</span>
+          <span class="badge">📐 ${it.m2 ?? '—'} m²</span>
+          ${it.parking ? `<span class="badge">🅿️ ${it.parking}</span>` : ''}
         </div>
+        <div class="price">${formatPrice(it.price, it.currency)}</div>
+      </div>
     </article>
   `).join('');
   resultsEl.innerHTML = html;

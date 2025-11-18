@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalle de Propiedad — Proyecto DS</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css?v=1">  <!-- ← ABSOLUTA -->
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand">🏠 Propiedades DS</div>
+      <a class="btn ghost back-link" href="/" aria-label="Volver al listado">← Volver</a>
+    </nav>
+    <h1 id="title">Cargando…</h1>
+    <p class="subtitle" id="subtitle">Detalle de la propiedad</p>
+  </header>
+
+  <main class="container">
+    <nav class="crumbs"><a href="/">← Volver al buscador</a></nav>
+
+    <section class="detail card">
+      <div class="thumb big" id="thumb"></div>
+      <div class="body">
+        <h2 id="h2"></h2>
+        <div class="meta" id="meta"></div>
+        <div class="price" id="price"></div>
+        <p class="address" id="address"></p>
+        <div class="info-list" id="infoList"></div>
+      </div>
+    </section>
+
+    <section class="similar">
+      <h3>Propiedades similares</h3>
+      <div id="similar" class="grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>Proyecto Data Science · Demo</small>
+  </footer>
+
+  <script type="module" src="/property.js"></script> <!-- ← ABSOLUTA -->
+</body>
+</html>

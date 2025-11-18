@@ -146,4 +146,65 @@ display:grid; gap:14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1
   padding-top: 6px;
 }
 
-/* si antes agregaste .actions-inline ya no se usa */
+/* Hacer toda la tarjeta clicable */
+.card { position: relative; }
+.card a.card-link {
+  position: absolute; inset: 0;
+  text-indent: -9999px;   /* accesible, pero invisible */
+}
+
+/* Migas de pan */
+.crumbs { margin: 6px 0 10px; }
+.crumbs a { color: #cbd5e1; text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+
+/* Sección de detalle */
+.detail{
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+  padding: 12px;
+}
+.thumb.big{
+  height: 280px;
+  background: linear-gradient(135deg, #284b8a, #4061a6);
+  border-radius: 12px;
+}
+.detail .body h2{ margin: 0 0 6px; }
+.info-list .bullets{ margin: 10px 0 0; padding-left: 18px; }
+.info-list li{ margin: 4px 0; }
+
+/* Responsivo */
+@media (max-width: 860px){
+  .detail{ grid-template-columns: 1fr; }
+  .thumb.big{ height: 220px; }
+}
+
+/* Botón "Volver" estilo pill en el header del detalle */
+.back-link{
+  margin-left: auto;               /* lo empuja a la derecha */
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid #ffffff33;
+  background: transparent;
+  color: #e8eefc;
+  text-decoration: none;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background .15s ease, border-color .15s ease, transform .12s ease;
+}
+.back-link:hover{ background:#ffffff12; }
+.back-link:active{ transform: translateY(1px); }
+
+/* modo claro */
+@media (prefers-color-scheme: light){
+  .back-link{
+    border-color: var(--line);
+    color: var(--text);
+    background: #fff;
+  }
+  .back-link:hover{ background:#f6f8fc; }
+}
