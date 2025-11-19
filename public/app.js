@@ -73,7 +73,7 @@ function renderResults(items){
           <span class="badge">📐 ${it.m2 ?? '—'} m²</span>
           ${it.parking ? `<span class="badge">🅿️ ${it.parking}</span>` : ''}
         </div>
-        <div class="price">${formatPrice(it.price, it.currency)}</div>
+        <div class="price">${formatPrice(it.price, 'UF')}</div>
       </div>
     </article>
   `).join('');
@@ -99,15 +99,28 @@ function setupPager({page, pageSize, total}){
     };
 }
 
-function formatPrice(v, currency='CLP'){
-    try{
+function formatPrice(v, currency = 'UF') {
+    try {
         const locale = 'es-CL';
-        if (currency === 'UF') return `${v} UF`;
-        return new Intl.NumberFormat(locale, { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(v);
-    }catch{
+
+        if (currency === 'UF') {
+            return `UF ${Number(v).toLocaleString(locale, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
+        }
+
+        return new Intl.NumberFormat(locale, { 
+            style: 'currency', 
+            currency: 'CLP', 
+            maximumFractionDigits: 0 
+        }).format(v);
+
+    } catch {
         return `${v} ${currency}`;
     }
 }
+
 
 
 function escapeHtml(str=''){

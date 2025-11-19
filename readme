@@ -1,59 +1,154 @@
-# Buscador de Propiedades (HTML/CSS/JS + Node/SQLite)
+# 🏡 Buscador de Propiedades (HTML/CSS/JS + Node/SQLite + UF)
 
-Aplicación simple para buscar propiedades por **comuna**, **habitaciones**, **baños** y **m²**.
-Incluye API en **Node/Express** con **SQLite** (se crea y se llena con datos de ejemplo automáticamente).
+Aplicación web para buscar propiedades por **comuna**, **habitaciones**, **baños** y **m²**, utilizando datos reales importados desde un archivo Excel.
 
-## 1 Requisitos
+El proyecto incluye:
 
-* **Node.js 18+** (recomendado 20+)
-* (Opcional) **Docker Desktop** si quieres levantarlo con contenedores
+* **Frontend** simple (HTML/CSS/JS)
+* **Backend en Node.js + Express**
+* **Base de datos SQLite**
+* **Visualización de precios en UF**
+* **Script en Python** para importar un Excel limpio a la base de datos
 
-## 2 Estructura (lo importante)
+---
+
+## 📁 1. Estructura del Proyecto
 
 ```
-propiedades-app/
+Proyecto-data-science/
 ├─ public/
 │  ├─ index.html
 │  ├─ styles.css
 │  └─ app.js
+├─ data/
+│  ├─ properties.db        ← Base de datos SQLite
+│  └─ inmobiliario_limpio_v4.xlsx  ← Archivo Excel (tu dataset)
+├─ import_inmobiliario.py   ← Script para cargar datos reales
 ├─ server.js
 ├─ package.json
-├─ Dockerfile
-└─ docker-compose.yml
+└─ Dockerfile / docker-compose.yml (opcional)
 ```
 
-## 3 Levantar en local (sin Docker)
+---
 
-1. Instalar dependencias:
+## 🔧 2. Requisitos
 
-   ```bash
-   npm install
-   ```
+* **Node.js 18+** (recomendado 20+)
+* **Python 3.9+** con:
+
+  * `pandas`
+  * `openpyxl`
+* (Opcional) **Docker Desktop**
+
+---
+
+## 🟦 3. Importar los datos reales (Excel → SQLite)
+
+Antes de levantar el servidor por primera vez, importa tus propiedades reales.
+
+### 3.1 Instalar dependencias de Python
+
+```bash
+pip install pandas openpyxl
+```
+
+### 3.2 Ejecutar el script de importación
+
+Asegúrate de que tu archivo Excel esté en:
+
+```
+./data/inmobiliario_limpio_v4.xlsx
+```
+
+Luego corre:
+
+```bash
+python import_inmobiliario.py
+```
+
+Este script:
+
+✔ Borra la tabla anterior
+✔ Crea una tabla nueva llamada **properties**
+✔ Inserta todas las filas del Excel
+✔ Guarda precios en **UF**
+✔ Limpia datos faltantes
+
+Al finalizar verás:
+
+```
+Filas a insertar: XXXX
+✅ Datos importados a data/properties.db
+```
+
+---
+
+## ▶️ 4. Levantar el proyecto en local (sin Docker)
+
+1. Instalar dependencias Node:
+
+```bash
+npm install
+```
 
 2. Iniciar el servidor:
 
-   ```bash
-   npm start
-   ```
+```bash
+npm start
+```
 
 3. Abrir en el navegador:
-   **[http://localhost:3000](http://localhost:3000)**
 
-4. (Opcional) Verifica que la API responde:
+👉 **[http://localhost:3000](http://localhost:3000)**
 
-   * Healthcheck: [http://localhost:3000/api/health](http://localhost:3000/api/health) → `{ "ok": true }`
-   * Datos: [http://localhost:3000/api/properties](http://localhost:3000/api/properties)
+4. Probar la API:
 
-> La primera vez se crea el archivo de base de datos **`./data/properties.db`** y se cargan **6 propiedades de ejemplo**.
+* Healthcheck
+  [http://localhost:3000/api/health](http://localhost:3000/api/health) → `{ "ok": true }`
+* Propiedades en UF
+  [http://localhost:3000/api/properties](http://localhost:3000/api/properties)
 
-## 4 Levantar con Docker (opcional)
+---
+
+## 🐳 5. Levantar con Docker (opcional)
 
 1. Construir y levantar:
 
-   ```bash
-   docker compose up -d --build
-   ```
-2. Abrir: **[http://localhost:3000](http://localhost:3000)**
+```bash
+docker compose up -d --build
+```
 
-> La base queda persistida en `./data` (mapeada dentro del contenedor).
+2. Abrir:
+
+👉 [http://localhost:3000](http://localhost:3000)
+
+La base queda persistida en `./data`.
+
+---
+
+## 💱 6. Precios en UF
+
+El frontend utiliza:
+
+```js
+formatPrice(value)
+```
+
+que formatea automáticamente así:
+
+```
+UF 4.520,35
+```
+
+No se muestra CLP en ningún lugar de la aplicación.
+
+---
+
+## 📌 7. Notas importantes
+
+* La semilla de datos falsos fue **eliminada** (no se generan datos de prueba).
+* Todo el contenido mostrado en la web proviene **exclusivamente del Excel importado**.
+* Puedes reemplazar el archivo Excel por una versión nueva y ejecutar de nuevo `python import_inmobiliario.py`.
+
+---
 
