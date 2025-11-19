@@ -13,7 +13,7 @@ async function search(page=1){
     const params = new URLSearchParams();
 
 
-    const comuna = form.comuna.value.trim();
+    const comuna = normalize(form.comuna.value);
     const roomsMin = form.roomsMin.value.trim();
     const bathsMin = form.bathsMin.value.trim();
     const minM2 = form.minM2.value.trim();
@@ -121,6 +121,13 @@ function formatPrice(v, currency = 'UF') {
     }
 }
 
+function normalize(str = "") {
+    return str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Elimina tildes (á → a, ú → u)
+        .trim();
+}
 
 
 function escapeHtml(str=''){
